@@ -1,4 +1,4 @@
-module Units.Temperature exposing (Temperature, Delta, CelsiusDegrees, degreesCelsius, inDegreesCelsius, degreesFahrenheit, inDegreesFahrenheit, kelvins, inKelvins, absoluteZero, celsiusDegrees, inCelsiusDegrees, fahrenheitDegrees, inFahrenheitDegrees, lessThan, greaterThan, compare, equalWithin, min, max, plus, minus, clamp, minimum, maximum, sort)
+module Units.Temperature exposing (Temperature, Delta, CelsiusDegrees, degreesCelsius, inDegreesCelsius, degreesFahrenheit, inDegreesFahrenheit, kelvins, inKelvins, absoluteZero, celsiusDegrees, inCelsiusDegrees, fahrenheitDegrees, inFahrenheitDegrees, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, min, max, plus, minus, clamp, minimum, maximum, sort, sortBy)
 
 {-| Unlike other modules in `elm-units`, this module contains two different
 primary types:
@@ -37,7 +37,7 @@ actual temperature.
 
 # Comparison
 
-@docs lessThan, greaterThan, compare, equalWithin, min, max
+@docs lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, min, max
 
 
 # Arithmetic
@@ -47,7 +47,7 @@ actual temperature.
 
 # List functions
 
-@docs minimum, maximum, sort
+@docs minimum, maximum, sort, sortBy
 
 -}
 
@@ -195,7 +195,7 @@ lessThan =
   Temperature.lessThan
 
 
-{-| Check if one temperature is less than another. Note the [argument order](/#argument-order)!
+{-| Check if one temperature is greater than another. Note the [argument order](/#argument-order)!
 
     roomTemperature =
         Temperature.degreesCelsius 21
@@ -213,6 +213,22 @@ lessThan =
 greaterThan : Temperature.Temperature -> Temperature.Temperature -> Bool
 greaterThan =
   Temperature.greaterThan
+
+
+{-| Check if one temperature is less than or equal to another. Note the
+[argument order](/#argument-order)!
+-}
+lessThanOrEqualTo : Temperature.Temperature -> Temperature.Temperature -> Bool
+lessThanOrEqualTo =
+  Temperature.lessThanOrEqualTo
+
+
+{-| Check if one temperature is greater than or equal to another. Note the
+[argument order](/#argument-order)!
+-}
+greaterThanOrEqualTo : Temperature.Temperature -> Temperature.Temperature -> Bool
+greaterThanOrEqualTo =
+  Temperature.greaterThanOrEqualTo
 
 
 {-| Compare two temperatures, returning an [`Order`](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order)
@@ -305,10 +321,10 @@ order](/#argument-order)!
 
     -- 25 degrees Celsius is 77 degrees Fahrenheit
     start =
-        Temperature.celsius 25
+        Temperature.degreesCelsius 25
 
     end =
-        Temperature.fahrenheit 80
+        Temperature.degreesFahrenheit 80
 
     end |> Temperature.minus start
     --> Temperature.fahrenheitDegrees 3
@@ -398,3 +414,27 @@ maximum =
 sort : List Temperature.Temperature -> List Temperature.Temperature
 sort =
   Temperature.sort
+
+
+{-| Sort an arbitrary list of values by a derived `Temperature`. If you had
+
+    rooms =
+        [ ( "Lobby", Temperature.degreesCelsius 21 )
+        , ( "Locker room", Temperature.degreesCelsius 17 )
+        , ( "Rink", Temperature.degreesCelsius -4 )
+        , ( "Sauna", Temperature.degreesCelsius 82 )
+        ]
+
+then you could sort by temperature with
+
+    Temperature.sortBy Tuple.second rooms
+    --> [ ( "Rink", Temperature.degreesCelsius -4 )
+    --> , ( "Locker room", Temperature.degreesCelsius 17 )
+    --> , ( "Lobby", Temperature.degreesCelsius 21 )
+    --> , ( "Sauna", Temperature.degreesCelsius 82 )
+    --> ]
+
+-}
+sortBy : (a -> Temperature.Temperature) -> List a -> List a
+sortBy =
+  Temperature.sortBy

@@ -1,4 +1,4 @@
-module Units.Quantity exposing (Quantity, Squared, Rate, zero, infinity, positiveInfinity, negativeInfinity, lessThan, greaterThan, compare, equalWithin, max, min, isNaN, isInfinite, negate, plus, minus, product, ratio, scaleBy, divideBy, abs, clamp, squared, sqrt, round, floor, ceiling, truncate, toFloatQuantity, sum, minimum, maximum, sort, per, times, at, at_, inverse, Unitless, int, toInt, float, toFloat)
+module Units.Quantity exposing (Quantity, Squared, Cubed, Product, Rate, zero, infinity, positiveInfinity, negativeInfinity, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, max, min, isNaN, isInfinite, negate, abs, plus, minus, multiplyBy, divideBy, squared, sqrt, cubed, cbrt, times, over, over_, per, at, at_, for, inverse, ratio, clamp, interpolateFrom, midpoint, round, floor, ceiling, truncate, toFloatQuantity, sum, minimum, maximum, sort, sortBy, Unitless, int, toInt, float, toFloat)
 
 {-|
 
@@ -7,10 +7,10 @@ module Units.Quantity exposing (Quantity, Squared, Rate, zero, infinity, positiv
 
 # Unit types
 
-The `Squared` and `Rate` units types allow you to build up and work with
-composite units in a fairly flexible way.
+The `Squared`, `Cubed`, `Product` and `Rate` units types allow you to build up
+and work with composite units in a fairly flexible way.
 
-@docs Squared, Rate
+@docs Squared, Cubed, Product, Rate
 
 
 # Constants
@@ -20,12 +20,27 @@ composite units in a fairly flexible way.
 
 # Comparison
 
-@docs lessThan, greaterThan, compare, equalWithin, max, min, isNaN, isInfinite
+@docs lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, max, min, isNaN, isInfinite
 
 
 # Arithmetic
 
-@docs negate, plus, minus, product, ratio, scaleBy, divideBy, abs, clamp, squared, sqrt
+@docs negate, abs, plus, minus, multiplyBy, divideBy, squared, sqrt, cubed, cbrt
+
+
+## Working with products
+
+@docs times, over, over_
+
+
+## Working with rates
+
+@docs per, at, at_, for, inverse
+
+
+## Miscellaneous
+
+@docs ratio, clamp, interpolateFrom, midpoint
 
 
 # `Int`/`Float` conversion
@@ -46,12 +61,7 @@ module. They're necessary because the built-in `List.sum` only supports `List
 Int` and `List Float`, and `minimum`/`maximum`/`sort` only support built-in
 comparable types like `Int`, `Float`, `String` and tuples.
 
-@docs sum, minimum, maximum, sort
-
-
-# Working with rates
-
-@docs per, times, at, at_, inverse
+@docs sum, minimum, maximum, sort, sortBy
 
 
 # Unitless quantities
@@ -89,20 +99,41 @@ type alias Quantity number units =
 
 
 {-| Represents a units type that is the square of some other units type; for
-example, `Meters` is one units type (the units type of a `Length`) and `Squared
-Meters` is another (the units type of an `Area`). This is useful because some
-functions in this module (specifically [`product`](#product),
-[`squared`](#squared), and [`sqrt`](#sqrt)) "know" about the `Squared` type and
-how to work with it.
+example, `Meters` is one units type (the units type of a [`Length`](Length)) and
+`Squared Meters` is another (the units type of an [`Area`](Area)). See the
+[`squared`](#squared) and [`sqrt`](#sqrt) functions for examples of use.
+
+This is a special case of the `Product` units type.
+
 -}
 type alias Squared units =
   Quantity.Squared units
 
 
+{-| Represents a units type that is the cube of some other units type; for
+example, `Meters` is one units type (the units type of a [`Length`](Length)) and
+`Cubed Meters` is another (the units type of an [`Volume`](Volume)). See the
+[`cubed`](Quantity#cubed) and [`cbrt`](Quantity#cbrt) functions for examples of
+use.
+
+This is a special case of the `Product` units type.
+
+-}
+type alias Cubed units =
+  Quantity.Cubed units
+
+
+{-| Represents a units type that is the product of two other units types. This
+is a more general form of `Squared` or `Cubed`. See [`times`](#product),
+[`over`](#over) and [`over_`](#over_) for how it can be used.
+-}
+type alias Product units1 units2 =
+  Quantity.Product units1 units2
+
+
 {-| Represents the units type of a rate or quotient such as a speed (`Rate
-Meters Seconds`) or a pressure (`Rate Newtons SquareMeters`). As with `Squared`,
-there are several functions that "know" about the `Rate` units type and how to
-work with it - see [Working with rates](#working-with-rates) for details.
+Meters Seconds`) or a pressure (`Rate Newtons SquareMeters`). See [Working with
+rates](#working-with-rates) for details.
 -}
 type alias Rate dependentUnits independentUnits =
   Quantity.Rate dependentUnits independentUnits
@@ -188,6 +219,22 @@ lessThan =
 greaterThan : Quantity.Quantity number units -> Quantity.Quantity number units -> Bool
 greaterThan =
   Quantity.greaterThan
+
+
+{-| Check if one quantity is less than or equal to another. Note the [argument
+order](/#argument-order)!
+-}
+lessThanOrEqualTo : Quantity.Quantity number units -> Quantity.Quantity number units -> Bool
+lessThanOrEqualTo =
+  Quantity.lessThanOrEqualTo
+
+
+{-| Check if one quantity is greater than or equal to another. Note the
+[argument order](/#argument-order)!
+-}
+greaterThanOrEqualTo : Quantity.Quantity number units -> Quantity.Quantity number units -> Bool
+greaterThanOrEqualTo =
+  Quantity.greaterThanOrEqualTo
 
 
 {-| Compare two quantities, returning an [`Order`](https://package.elm-lang.org/packages/elm/core/latest/Basics#Order)
@@ -292,6 +339,17 @@ negate =
   Quantity.negate
 
 
+{-| Get the absolute value of a quantity.
+
+    Quantity.abs (Duration.milliseconds -10)
+    --> Duration.milliseconds 10
+
+-}
+abs : Quantity.Quantity number units -> Quantity.Quantity number units
+abs =
+  Quantity.abs
+
+
 {-| Add two quantities.
 
     Length.meters 1 |> Quantity.plus (Length.centimeters 5)
@@ -331,29 +389,294 @@ minus =
   Quantity.minus
 
 
-{-| Multiply two quantities with the same `units` together, resulting in a
-quantity in `Squared units`.
+{-| Scale a `Quantity` by a `number`.
 
-This works for any units type (which is useful when used with [`sqrt`](#sqrt)!)
-but one special case is worth pointing out. The units type of an [`Area`](Area)
-is `SquareMeters`, which is a type alias for `Squared Meters`. This means that
-the product of two `Length`s does in fact give you an `Area`:
+    Quantity.multiplyBy 1.5 (Duration.hours 1)
+    --> Duration.minutes 90
 
-    Quantity.product
-        (Length.meters 2)
-        (Length.centimeters 40)
-    --> Area.squareMeters 0.8
-
-    -- This is the definition of an acre, I kid you not 😈
-    Quantity.product (Length.feet 66) (Length.feet 660)
-    --> Area.acres 1
-
-Note that there are [other forms of multiplication](/#multiplication)!
+Note that there are [other forms of multiplication](/#multiplication-and-division)!
 
 -}
-product : Quantity.Quantity number units -> Quantity.Quantity number units -> Quantity.Quantity number (Quantity.Squared units)
-product =
-  Quantity.product
+multiplyBy : number -> Quantity.Quantity number units -> Quantity.Quantity number units
+multiplyBy =
+  Quantity.multiplyBy
+
+
+{-| Divide a `Quantity` by a `Float`.
+
+    Quantity.divideBy 2 (Duration.hours 1)
+    --> Duration.minutes 30
+
+Note that there are [other forms of division](/#multiplication-and-division)!
+
+-}
+divideBy : Float -> Quantity.Quantity Float units -> Quantity.Quantity Float units
+divideBy =
+  Quantity.divideBy
+
+
+{-| Square a quantity with some `units`, resulting in a new quantity in
+`Squared units`:
+
+    Quantity.squared (Length.meters 5)
+    --> Area.squareMeters 25
+
+-}
+squared : Quantity.Quantity number units -> Quantity.Quantity number (Quantity.Squared units)
+squared =
+  Quantity.squared
+
+
+{-| Take a quantity in `Squared units` and return the square root of that
+quantity in plain `units`:
+
+    Quantity.sqrt (Area.hectares 1)
+    --> Length.meters 100
+
+Getting fancier, you could write a 2D hypotenuse (magnitude) function that
+worked on _any_ quantity type (length, speed, force...) as
+
+    hypotenuse :
+        Quantity Float units
+        -> Quantity Float units
+        -> Quantity Float units
+    hypotenuse x y =
+        Quantity.sqrt
+            (Quantity.squared x
+                |> Quantity.plus
+                    (Quantity.squared y)
+            )
+
+This works because:
+
+  - The `x` and `y` arguments are both in `units`
+  - So each squared item is in `Squared units`
+  - So the sum is also in `Squared units`
+  - And calling `sqrt` on something in `Squared units` returns a value back in
+    `units`
+
+-}
+sqrt : Quantity.Quantity Float (Quantity.Squared units) -> Quantity.Quantity Float units
+sqrt =
+  Quantity.sqrt
+
+
+{-| Cube a quantity with some `units`, resulting in a new quantity in
+`Cubed units`.
+
+    Quantity.cubed (Length.meters 5)
+    --> Volume.cubicMeters 125
+
+-}
+cubed : Quantity.Quantity number units -> Quantity.Quantity number (Quantity.Cubed units)
+cubed =
+  Quantity.cubed
+
+
+{-| Take a quantity in `Cubed units` and return the cube root of that
+quantity in plain `units`.
+
+    Quantity.cbrt (Volume.liters 1)
+    --> Length.centimeters 10
+
+-}
+cbrt : Quantity.Quantity Float (Quantity.Cubed units) -> Quantity.Quantity Float units
+cbrt =
+  Quantity.cbrt
+
+
+{-| Multiply two quantities with units types `units1` and `units2` together,
+resulting in a quantity with units type `Product units1 units2`. Note the
+[argument order](/#argument-order)!
+
+This works for any two units types, but one special case is worth pointing out.
+The units type of an [`Area`](Area) is `SquareMeters`, which is a type alias for
+`Squared Meters`, which in turn expands to `Product Meters Meters`. This means
+that the product of two `Length`s does in fact give you an `Area`:
+
+    -- This is the definition of an acre, I kid you not 😈
+    Length.feet 66 |> Quantity.times (Length.feet 660)
+    --> Area.acres 1
+
+We can also multiply an `Area` by a `Length` to get a `Volume`:
+
+    Area.squareMeters 1
+        |> Quantity.times
+            (Length.centimeters 1)
+    --> Volume.liters 10
+
+Note that there are [other forms of multiplication](/#multiplication-and-division)!
+
+-}
+times : Quantity.Quantity number units2 -> Quantity.Quantity number units1 -> Quantity.Quantity number (Quantity.Product units1 units2)
+times =
+  Quantity.times
+
+
+{-| Divide a quantity in `Product units1 units2` by a quantity in `units1`,
+resulting in another quantity in `units2`. For example, the units type of a
+`Force` is `Product Kilograms MetersPerSecondSquared` (mass times acceleration),
+so we could divide a force by a given mass to determine how fast that mass would
+be accelerated by the given force:
+
+    Force.newtons 100
+        |> Quantity.over
+            (Mass.kilograms 50)
+    --> Acceleration.metersPerSecondSquared 2
+
+Note that there are [other forms of division](/#multiplication-and-division)!
+
+-}
+over : Quantity.Quantity Float units1 -> Quantity.Quantity Float (Quantity.Product units1 units2) -> Quantity.Quantity Float units2
+over =
+  Quantity.over
+
+
+{-| Just like `over` but divide by a quantity in `units2`, resulting in another
+quantity in `units1`. For example, we could divide a force by a desired
+acceleration to determine how much mass could be accelerated at that rate:
+
+    Force.newtons 100
+        |> Quantity.over_
+            (Acceleration.metersPerSecondSquared 5)
+    --> Mass.kilograms 20
+
+-}
+over_ : Quantity.Quantity Float units2 -> Quantity.Quantity Float (Quantity.Product units1 units2) -> Quantity.Quantity Float units1
+over_ =
+  Quantity.over_
+
+
+{-| Construct a rate of change by dividing a dependent quantity (numerator) by
+an independent quantity (denominator):
+
+    distance =
+        Length.miles 1
+
+    time =
+        Duration.minutes 1
+
+    speed =
+        distance |> Quantity.per time
+
+    speed |> Speed.inMilesPerHour
+    --> 60
+
+Note that we could directly use our rate of change value as a `Speed`! That is
+because many built-in quantity types are defined as rates of change, for
+example:
+
+  - `Speed` is `Length` per `Duration`
+  - `Acceleration` is `Speed` per `Duration`
+  - `Pressure` is `Force` per `Area`
+  - `Power` is `Energy` per `Duration`
+  - `Current` is `Charge` per `Duration`
+  - `Resistance` is `Voltage` per `Current`
+  - `Voltage` is `Power` per `Current`
+
+Note that there are [other forms of division](/#multiplication-and-division)!
+
+-}
+per : Quantity.Quantity Float independentUnits -> Quantity.Quantity Float dependentUnits -> Quantity.Quantity Float (Quantity.Rate dependentUnits independentUnits)
+per =
+  Quantity.per
+
+
+{-| Multiply a rate of change by an independent quantity (the denominator in
+the rate) to get a total value:
+
+    Duration.minutes 30
+        |> Quantity.at
+            (Speed.kilometersPerHour 100)
+    --> Length.kilometers 50
+
+Can be useful to define conversion functions from one unit to another, since
+if you define a `rate` then `Quantity.at rate` will give you a conversion
+function:
+
+    pixelDensity : Quantity Float (Rate Pixels Meters)
+    pixelDensity =
+        Pixels.pixels 96 |> Quantity.per (Length.inches 1)
+
+    lengthToPixels : Length -> Quantity Float Pixels
+    lengthToPixels length =
+        Quantity.at pixelDensity length
+
+    lengthToPixels (Length.inches 3)
+    --> Pixels.pixels 288
+
+Eagle-eyed readers will note that using partial application you could also
+simply write
+
+    lengthToPixels =
+        Quantity.at pixelDensity
+
+Note that there are [other forms of multiplication](/#multiplication-and-division)!
+
+-}
+at : Quantity.Quantity number (Quantity.Rate dependentUnits independentUnits) -> Quantity.Quantity number independentUnits -> Quantity.Quantity number dependentUnits
+at =
+  Quantity.at
+
+
+{-| Given a rate and a _dependent_ quantity (total value), determine the
+necessary amount of the _independent_ quantity:
+
+    Length.kilometers 75
+        |> Quantity.at_
+            (Speed.kilometersPerHour 100)
+    --> Duration.minutes 45
+
+Where `at` performs multiplication, `at_` performs division - you multiply a
+speed by a duration to get a distance, but you divide a distance by a speed to
+get a duration.
+
+Similar to `at`, `at_` can be used to define an _inverse_ conversion function:
+
+    pixelDensity : Quantity Float (Rate Pixels Meters)
+    pixelDensity =
+        Pixels.pixels 96 |> Quantity.per (Length.inches 1)
+
+    pixelsToLength : Quantity Float Pixels -> Length
+    pixelsToLength pixels =
+        Quantity.at_ pixelDensity pixels
+
+    pixelsToLength (Pixels.pixels 48)
+    --> Length.inches 0.5
+
+-}
+at_ : Quantity.Quantity Float (Quantity.Rate dependentUnits independentUnits) -> Quantity.Quantity Float dependentUnits -> Quantity.Quantity Float independentUnits
+at_ =
+  Quantity.at_
+
+
+{-| Same as `at` but with the argument order flipped, which may read better
+in some cases:
+
+    Speed.kilometersPerHour 100
+        |> Quantity.for
+            (Duration.minutes 30)
+    --> Length.kilometers 50
+
+-}
+for : Quantity.Quantity number independentUnits -> Quantity.Quantity number (Quantity.Rate dependentUnits independentUnits) -> Quantity.Quantity number dependentUnits
+for =
+  Quantity.for
+
+
+{-| Find the inverse of a given rate. May be useful if you are using a rate to
+define a conversion, and want to convert the other way;
+
+    Quantity.at (Quantity.inverse rate)
+
+is equivalent to
+
+    Quantity.at_ rate
+
+-}
+inverse : Quantity.Quantity Float (Quantity.Rate dependentUnits independentUnits) -> Quantity.Quantity Float (Quantity.Rate independentUnits dependentUnits)
+inverse =
+  Quantity.inverse
 
 
 {-| Find the ratio of two quantities with the same units.
@@ -365,41 +688,6 @@ product =
 ratio : Quantity.Quantity Float units -> Quantity.Quantity Float units -> Float
 ratio =
   Quantity.ratio
-
-
-{-| Multiply a `Quantity` by a `number`.
-
-    Quantity.scaleBy 1.5 (Duration.hours 1)
-    --> Duration.minutes 90
-
-Note that there are [other forms of multiplication](/#multiplication)!
-
--}
-scaleBy : number -> Quantity.Quantity number units -> Quantity.Quantity number units
-scaleBy =
-  Quantity.scaleBy
-
-
-{-| Divide a `Quantity` by a `Float`.
-
-    Quantity.divideBy 2 (Duration.hours 1)
-    --> Duration.minutes 30
-
--}
-divideBy : Float -> Quantity.Quantity Float units -> Quantity.Quantity Float units
-divideBy =
-  Quantity.divideBy
-
-
-{-| Get the absolute value of a quantity.
-
-    Quantity.abs (Duration.milliseconds -10)
-    --> Duration.milliseconds 10
-
--}
-abs : Quantity.Quantity number units -> Quantity.Quantity number units
-abs =
-  Quantity.abs
 
 
 {-| Given a lower and upper bound, clamp a given quantity to within those
@@ -427,53 +715,56 @@ clamp =
   Quantity.clamp
 
 
-{-| Square a quantity with some `units`, resulting in a new quantity in
-`Squared units`:
+{-| Interpolate from the first quantity to the second, based on a parameter that
+ranges from zero to one. Passing a parameter value of zero will return the start
+value and passing a parameter value of one will return the end value.
 
-    Quantity.squared (Length.meters 5)
-    --> Area.squareMeters 25
+    fiveMeters =
+        Length.meters 5
 
-(See the documentation of [`product`](#product) for an explanation of why a
-squared `Length` does in fact give you an `Area`.)
+    tenMeters =
+        Length.meters 10
 
--}
-squared : Quantity.Quantity number units -> Quantity.Quantity number (Quantity.Squared units)
-squared =
-  Quantity.squared
+    Quantity.interpolateFrom fiveMeters tenMeters 0
+    --> Length.meters 5
 
+    Quantity.interpolateFrom fiveMeters tenMeters 1
+    --> Length.meters 10
 
-{-| Take a quantity in `Squared units` and return the square root of that
-quantity in plain `units`:
+    Quantity.interpolateFrom fiveMeters tenMeters 0.6
+    --> Length.meters 8
 
-    Quantity.sqrt (Area.hectares 1)
-    --> Length.meters 100
+The end value can be less than the start value:
 
-Getting fancier, you could write a 2D hypotenuse (magnitude) function that
-worked on _any_ quantity type (length, speed, force...) as
+    Quantity.interpolateFrom tenMeters fiveMeters 0.1
+    --> Length.meters 9.5
 
-    hypotenuse :
-        Quantity Float units
-        -> Quantity Float units
-        -> Quantity Float units
-    hypotenuse x y =
-        Quantity.sqrt <|
-            Quantity.sum
-                [ Quantity.squared x
-                , Quantity.squared y
-                ]
+Parameter values less than zero or greater than one can be used to extrapolate:
 
-This works because:
+    Quantity.interpolateFrom fiveMeters tenMeters 1.5
+    --> Length.meters 12.5
 
-  - The `x` and `y` arguments are both in `units`
-  - So each list item is in `Squared units`
-  - So the sum is also in `Squared units`
-  - And calling `sqrt` on something in `Squared units` returns a value back in
-    `units`
+    Quantity.interpolateFrom fiveMeters tenMeters -0.5
+    --> Length.meters 2.5
+
+    Quantity.interpolateFrom tenMeters fiveMeters -0.2
+    --> Length.meters 11
 
 -}
-sqrt : Quantity.Quantity Float (Quantity.Squared units) -> Quantity.Quantity Float units
-sqrt =
-  Quantity.sqrt
+interpolateFrom : Quantity.Quantity Float units -> Quantity.Quantity Float units -> Float -> Quantity.Quantity Float units
+interpolateFrom =
+  Quantity.interpolateFrom
+
+
+{-| Find the midpoint between two quantities.
+
+    Quantity.midpoint (Length.meters 5) (Length.meters 10)
+    --> Length.meters 7.5
+
+-}
+midpoint : Quantity.Quantity Float units -> Quantity.Quantity Float units -> Quantity.Quantity Float units
+midpoint =
+  Quantity.midpoint
 
 
 {-| Round a `Float`-valued quantity to the nearest `Int`.
@@ -535,7 +826,7 @@ toFloatQuantity =
   Quantity.toFloatQuantity
 
 
-{-| Find the sum of a list of quanties.
+{-| Find the sum of a list of quantities.
 
     Quantity.sum
         [ Length.meters 1
@@ -603,140 +894,34 @@ sort =
   Quantity.sort
 
 
-{-| Construct a rate of change by dividing a dependent quantity (numerator) by
-an independent quantity (denominator):
+{-| Sort an arbitrary list of values by a derived `Quantity`. If you had
 
-    distance =
-        Length.miles 1
+    people =
+        [ { name = "Bob", height = Length.meters 1.6 }
+        , { name = "Charlie", height = Length.meters 2.0 }
+        , { name = "Alice", height = Length.meters 1.8 }
+        ]
 
-    time =
-        Duration.minutes 1
+then you could sort by name with
 
-    speed =
-        distance |> Quantity.per time
+    List.sortBy .name people
+    --> [ { name = "Alice", height = Length.meters 1.8 }
+    --> , { name = "Bob", height = Length.meters 1.6 }
+    --> , { name = "Charlie", height = Length.meters 2.0 }
+    --> ]
 
-    speed |> Speed.inMilesPerHour
-    --> 60
+(nothing new there!), and sort by height with
 
-Note that we could directly use our rate of change value as a `Speed`! That is
-because many built-in quantity types are defined as rates of change, for
-example:
-
-  - `Speed` is `Length` per `Duration`
-  - `Acceleration` is `Speed` per `Duration`
-  - `Pressure` is `Force` per `Area`
-  - `Power` is `Energy` per `Duration`
-  - `Force` is `Energy` per `Length`
-  - `Current` is `Charge` per `Duration`
-  - `Voltage` is `Power` per `Current`
-  - `Resistance` is `Voltage` per `Current`
+    Quantity.sortBy .height people
+    --> [ { name = "Bob", height = Length.meters 1.6 }
+    --> , { name = "Alice", height = Length.meters 1.8 }
+    --> , { name = "Charlie", height = Length.meters 2.0 }
+    --> ]
 
 -}
-per : Quantity.Quantity Float independentUnits -> Quantity.Quantity Float dependentUnits -> Quantity.Quantity Float (Quantity.Rate dependentUnits independentUnits)
-per =
-  Quantity.per
-
-
-{-| Multiply a rate of change by an independent quantity (the denominator in
-the rate) to get a total value:
-
-    -- Pressure is force per area
-    pressure =
-        Pressure.kilopascals 10
-
-    area =
-        Area.squareMeters 3
-
-    pressure |> Quantity.times area
-    --> Force.newtons 30000
-
-Note that there are [other forms of multiplication](/#multiplication)!
-
--}
-times : Quantity.Quantity number independentUnits -> Quantity.Quantity number (Quantity.Rate dependentUnits independentUnits) -> Quantity.Quantity number dependentUnits
-times =
-  Quantity.times
-
-
-{-| Same as `times` but with the argument order flipped, which may read better
-in some cases:
-
-    Duration.minutes 30
-        |> Quantity.at
-            (Speed.kilometersPerHour 100)
-    --> Length.kilometers 50
-
-Can be useful to define conversion functions from one unit to another, since
-if you define a `rate` then `Quantity.at rate` will give you a conversion
-function:
-
-    pixelDensity : Quantity Float (Rate Pixels Meters)
-    pixelDensity =
-        Pixels.pixels 96 |> Quantity.per (Length.inches 1)
-
-    lengthToPixels : Length -> Quantity Float Pixels
-    lengthToPixels length =
-        Quantity.at pixelDensity length
-
-    lengthToPixels (Length.inches 3)
-    --> Pixels.pixels 288
-
-Eagle-eyed readers will note that using partial application you could also
-simply write
-
-    lengthToPixels =
-        Quantity.at pixelDensity
-
--}
-at : Quantity.Quantity number (Quantity.Rate dependentUnits independentUnits) -> Quantity.Quantity number independentUnits -> Quantity.Quantity number dependentUnits
-at =
-  Quantity.at
-
-
-{-| Given a rate and a _dependent_ value, determine the necessary amount of the
-_independent_ value:
-
-    Length.kilometers 75
-        |> Quantity.at_
-            (Speed.kilometersPerHour 100)
-    --> Duration.minutes 45
-
-Where `times` and `at` perform multiplication, `at_` performs division - you
-multiply a speed by a duration to get a distance, but you divide a distance by
-a speed to get a duration.
-
-Similar to `at`, `at_` can be used to define an _inverse_ conversion function:
-
-    pixelDensity : Quantity Float (Rate Pixels Meters)
-    pixelDensity =
-        Pixels.pixels 96 |> Quantity.per (Length.inches 1)
-
-    pixelsToLength : Quantity Float Pixels -> Length
-    pixelsToLength pixels =
-        Quantity.at_ pixelDensity pixels
-
-    pixelsToLength (Pixels.pixels 48)
-    --> Length.inches 0.5
-
--}
-at_ : Quantity.Quantity Float (Quantity.Rate dependentUnits independentUnits) -> Quantity.Quantity Float dependentUnits -> Quantity.Quantity Float independentUnits
-at_ =
-  Quantity.at_
-
-
-{-| Find the inverse of a given rate. May be useful if you are using a rate to
-define a conversion, and want to convert the other way;
-
-    Quantity.at (Quantity.inverse rate)
-
-is equivalent to
-
-    Quantity.at_ rate
-
--}
-inverse : Quantity.Quantity Float (Quantity.Rate dependentUnits independentUnits) -> Quantity.Quantity Float (Quantity.Rate independentUnits dependentUnits)
-inverse =
-  Quantity.inverse
+sortBy : (a -> Quantity.Quantity number units) -> List a -> List a
+sortBy =
+  Quantity.sortBy
 
 
 {-| A special units type representing 'no units'. A `Quantity Int Unitless`

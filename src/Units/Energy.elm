@@ -3,6 +3,12 @@ module Units.Energy exposing (Energy, Joules, joules, inJoules, kilojoules, inKi
 {-| An `Energy` value represents an amount of energy (or work) in joules,
 kilowatt hours etc. It is stored as a number of joules.
 
+Note that since `Joules` is defined as `Product Newtons Meters`, you can compute
+energy directly as a product of force and distance:
+
+    Force.newtons 5 |> Quantity.times (Length.meters 4)
+    --> Energy.joules 20
+
 @docs Energy, Joules
 
 @docs joules, inJoules, kilojoules, inKilojoules, megajoules, inMegajoules, kilowattHours, inKilowattHours
@@ -10,6 +16,8 @@ kilowatt hours etc. It is stored as a number of joules.
 -}
 
 import Energy
+import Force
+import Length
 import Quantity
 
 

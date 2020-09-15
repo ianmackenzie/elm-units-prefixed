@@ -13,7 +13,7 @@ You can also do rate-related calculations with `Speed` values to compute
 `Length` or `Duration`:
 
     length =
-        speed |> Quantity.times duration
+        speed |> Quantity.for duration
 
     alsoLength =
         duration |> Quantity.at speed

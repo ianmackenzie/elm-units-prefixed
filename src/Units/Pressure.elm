@@ -13,9 +13,6 @@ You can also do rate-related calculations with `Pressure` values to compute
 `Force` or `Area`:
 
     force =
-        pressure |> Quantity.times area
-
-    alsoForce =
         area |> Quantity.at pressure
 
     area =
