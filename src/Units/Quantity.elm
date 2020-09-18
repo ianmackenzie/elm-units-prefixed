@@ -1,4 +1,4 @@
-module Units.Quantity exposing (Quantity, Squared, Cubed, Product, Rate, zero, infinity, positiveInfinity, negativeInfinity, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, max, min, isNaN, isInfinite, negate, abs, plus, minus, multiplyBy, divideBy, squared, sqrt, cubed, cbrt, times, over, over_, per, at, at_, for, inverse, ratio, clamp, interpolateFrom, midpoint, round, floor, ceiling, truncate, toFloatQuantity, sum, minimum, maximum, sort, sortBy, Unitless, int, toInt, float, toFloat)
+module Units.Quantity exposing (Quantity, Squared, Cubed, Product, Rate, zero, infinity, positiveInfinity, negativeInfinity, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, max, min, isNaN, isInfinite, negate, abs, plus, minus, multiplyBy, divideBy, squared, sqrt, cubed, cbrt, times, over, over_, per, at, at_, for, inverse, ratio, clamp, interpolateFrom, midpoint, range, round, floor, ceiling, truncate, toFloatQuantity, sum, minimum, maximum, sort, sortBy, Unitless, int, toInt, float, toFloat)
 
 {-|
 
@@ -40,7 +40,7 @@ and work with composite units in a fairly flexible way.
 
 ## Miscellaneous
 
-@docs ratio, clamp, interpolateFrom, midpoint
+@docs ratio, clamp, interpolateFrom, midpoint, range
 
 
 # `Int`/`Float` conversion
@@ -765,6 +765,76 @@ interpolateFrom =
 midpoint : Quantity.Quantity Float units -> Quantity.Quantity Float units -> Quantity.Quantity Float units
 midpoint =
   Quantity.midpoint
+
+
+{-| Construct a range of evenly-spaced values given a `start` value, an `end`
+value and the number of `steps` to take from the start to the end. The first
+value in the returned list will be equal to `start` and the last value will be
+equal to `end`. Note that the number of returned values will be one greater than
+the number of steps!
+
+    Quantity.range
+        { start = Length.meters 2
+        , end = Length.meters 3
+        , steps = 5
+        }
+    --> [ Length.centimeters 200
+    --> , Length.centimeters 220
+    --> , Length.centimeters 240
+    --> , Length.centimeters 260
+    --> , Length.centimeters 280
+    --> , Length.centimeters 300
+    --> ]
+
+The start and end values can be in either order:
+
+    Quantity.range
+        { start = Duration.hours 1
+        , end = Quantity.zero
+        , steps = 4
+        }
+    --> [ Duration.minutes 60
+    --> , Duration.minutes 45
+    --> , Duration.minutes 30
+    --> , Duration.minutes 15
+    --> , Duration.minutes 0
+    --> ]
+
+Passing a negative or zero `steps` value will result in an empty list being
+returned.
+
+If you need finer control over what values get generated, try combining
+`interpolateFrom` with the various functions in the
+[`elm-1d-parameter`](https://package.elm-lang.org/packages/ianmackenzie/elm-1d-parameter/latest/)
+package. For example:
+
+    -- Same as using Quantity.range
+    Parameter1d.steps 4 <|
+        Quantity.interpolateFrom
+            (Length.meters 2)
+            (Length.meters 3)
+    --> [ Length.centimeters 200
+    --> , Length.centimeters 225
+    --> , Length.centimeters 250
+    --> , Length.centimeters 275
+    --> , Length.centimeters 300
+    --> ]
+
+    -- Omit the last value
+    Parameter1d.leading 4 <|
+        Quantity.interpolateFrom
+            (Length.meters 2)
+            (Length.meters 3)
+    --> [ Length.centimeters 200
+    --> , Length.centimeters 225
+    --> , Length.centimeters 250
+    --> , Length.centimeters 275
+    --> ]
+
+-}
+range : { start : Quantity.Quantity Float units, end : Quantity.Quantity Float units, steps : Int } -> List (Quantity.Quantity Float units)
+range =
+  Quantity.range
 
 
 {-| Round a `Float`-valued quantity to the nearest `Int`.
