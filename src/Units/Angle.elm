@@ -1,4 +1,4 @@
-module Units.Angle exposing (Angle, Radians, radians, inRadians, degrees, inDegrees, turns, inTurns, minutes, inMinutes, seconds, inSeconds, Sign, fromDms, toDms, sin, cos, tan, asin, acos, atan, atan2, radian, degree, turn, minute, second)
+module Units.Angle exposing (Angle, Radians, radians, inRadians, degrees, inDegrees, turns, inTurns, minutes, inMinutes, seconds, inSeconds, Sign, fromDms, toDms, sin, cos, tan, asin, acos, atan, atan2, normalize, radian, degree, turn, minute, second)
 
 {-| An `Angle` represents an angle in degrees, radians, or turns. It is stored
 as a number of radians.
@@ -32,6 +32,11 @@ these functions instead of [the corresponding ones in core][1].
 [1]: https://package.elm-lang.org/packages/elm/core/latest/Basics#trigonometry
 
 @docs sin, cos, tan, asin, acos, atan, atan2
+
+
+## Normalization
+
+@docs normalize
 
 
 ## Constants
@@ -288,6 +293,28 @@ atan =
 atan2 : Quantity.Quantity Float units -> Quantity.Quantity Float units -> Angle.Angle
 atan2 =
   Angle.atan2
+
+
+{-| Convert an arbitrary angle to the equivalent angle in the range -180 to 180
+degrees (-π to π radians), by adding or subtracting some multiple of 360
+degrees (2π radians) if necessary.
+
+    Angle.normalize (Angle.degrees 45)
+    --> Angle.degrees 45
+
+    Angle.normalize (Angle.degrees 270)
+    --> Angle.degrees -90
+
+    Angle.normalize (Angle.degrees 370)
+    --> Angle.degrees 10
+
+    Angle.normalize (Angle.degrees 181)
+    --> Angle.degrees -179
+
+-}
+normalize : Angle.Angle -> Angle.Angle
+normalize =
+  Angle.normalize
 
 
 {-| -}

@@ -1,4 +1,4 @@
-module Units.Quantity exposing (Quantity, Squared, Cubed, Product, Rate, zero, infinity, positiveInfinity, negativeInfinity, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, max, min, isNaN, isInfinite, negate, abs, plus, minus, multiplyBy, divideBy, twice, half, squared, sqrt, cubed, cbrt, times, over, over_, per, at, at_, for, inverse, modBy, fractionalModBy, remainderBy, fractionalRemainderBy, ratio, clamp, interpolateFrom, midpoint, range, in_, round, floor, ceiling, truncate, toFloatQuantity, sum, minimum, maximum, minimumBy, maximumBy, sort, sortBy, Unitless, int, toInt, float, toFloat)
+module Units.Quantity exposing (Quantity, Squared, Cubed, Product, Rate, zero, infinity, positiveInfinity, negativeInfinity, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, max, min, isNaN, isInfinite, negate, abs, plus, minus, multiplyBy, divideBy, twice, half, squared, sqrt, cubed, cbrt, times, over, over_, per, at, at_, for, inverse, modBy, fractionalModBy, remainderBy, fractionalRemainderBy, ratio, clamp, interpolateFrom, midpoint, range, in_, round, floor, ceiling, truncate, toFloatQuantity, sum, minimum, maximum, minimumBy, maximumBy, sort, sortBy, Unitless, int, toInt, float, toFloat, unsafe, unwrap)
 
 {-|
 
@@ -102,6 +102,15 @@ value, and so should get compiled away entirely when using `elm make
 --optimize`.
 
 @docs Unitless, int, toInt, float, toFloat
+
+
+# Unsafe conversions
+
+These functions are equivalent to directly constructing or unwrapping `Quantity`
+values, and generally shouldn't be used outside of some specialized situations
+that can come up when authoring packages that use `elm-units`.
+
+@docs unsafe, unwrap
 
 -}
 
@@ -1189,3 +1198,15 @@ Float units`, check out [`toFloatQuantity`](#toFloatQuantity).
 toFloat : Quantity.Quantity Float Quantity.Unitless -> Float
 toFloat =
   Quantity.toFloat
+
+
+{-| -}
+unsafe : number -> Quantity.Quantity number units
+unsafe =
+  Quantity.unsafe
+
+
+{-| -}
+unwrap : Quantity.Quantity number units -> number
+unwrap =
+  Quantity.unwrap
