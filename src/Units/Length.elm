@@ -1,4 +1,4 @@
-module Units.Length exposing (Length, Meters, meters, inMeters, microns, inMicrons, millimeters, inMillimeters, centimeters, inCentimeters, kilometers, inKilometers, thou, inThou, inches, inInches, feet, inFeet, yards, inYards, miles, inMiles, astronomicalUnits, inAstronomicalUnits, parsecs, inParsecs, lightYears, inLightYears)
+module Units.Length exposing (Length, Meters, meters, inMeters, microns, inMicrons, millimeters, inMillimeters, centimeters, inCentimeters, kilometers, inKilometers, thou, inThou, inches, inInches, feet, inFeet, yards, inYards, miles, inMiles, astronomicalUnits, inAstronomicalUnits, parsecs, inParsecs, lightYears, inLightYears, meter, micron, millimeter, centimeter, kilometer, inch, foot, yard, mile, astronomicalUnit, parsec, lightYear)
 
 {-| A `Length` represents a length in meters, feet, centimeters, miles etc. It
 is stored as a number of meters.
@@ -20,6 +20,19 @@ is stored as a number of meters.
 ## Astronomical
 
 @docs astronomicalUnits, inAstronomicalUnits, parsecs, inParsecs, lightYears, inLightYears
+
+
+## Constants
+
+Shorthand for `Length.meters 1`, `Length.feet 1` etc. Can be convenient to use
+with [`Quantity.per`](Quantity#per).
+
+Note that `thou` is omitted since it doesn't have separate singular and plural
+forms.
+
+@docs meter, micron, millimeter, centimeter, kilometer
+@docs inch, foot, yard, mile
+@docs astronomicalUnit, parsec, lightYear
 
 -}
 
@@ -250,3 +263,75 @@ lightYears =
 inLightYears : Length.Length -> Float
 inLightYears =
   Length.inLightYears
+
+
+{-| -}
+meter : Length.Length
+meter =
+  Length.meter
+
+
+{-| -}
+micron : Length.Length
+micron =
+  Length.micron
+
+
+{-| -}
+millimeter : Length.Length
+millimeter =
+  Length.millimeter
+
+
+{-| -}
+centimeter : Length.Length
+centimeter =
+  Length.centimeter
+
+
+{-| -}
+kilometer : Length.Length
+kilometer =
+  Length.kilometer
+
+
+{-| -}
+inch : Length.Length
+inch =
+  Length.inch
+
+
+{-| -}
+foot : Length.Length
+foot =
+  Length.foot
+
+
+{-| -}
+yard : Length.Length
+yard =
+  Length.yard
+
+
+{-| -}
+mile : Length.Length
+mile =
+  Length.mile
+
+
+{-| -}
+astronomicalUnit : Length.Length
+astronomicalUnit =
+  Length.astronomicalUnit
+
+
+{-| -}
+parsec : Length.Length
+parsec =
+  Length.parsec
+
+
+{-| -}
+lightYear : Length.Length
+lightYear =
+  Length.lightYear

@@ -1,4 +1,4 @@
-module Units.Mass exposing (Mass, Kilograms, kilograms, inKilograms, grams, inGrams, metricTons, inMetricTons, pounds, inPounds, ounces, inOunces, longTons, inLongTons, shortTons, inShortTons)
+module Units.Mass exposing (Mass, Kilograms, kilograms, inKilograms, grams, inGrams, metricTons, inMetricTons, pounds, inPounds, ounces, inOunces, longTons, inLongTons, shortTons, inShortTons, kilogram, gram, metricTon, pound, ounce, longTon, shortTon)
 
 {-| A `Mass` represents a mass in kilograms, pounds, metric or imperial tons
 etc. It is stored as a number of kilograms.
@@ -19,6 +19,14 @@ etc. It is stored as a number of kilograms.
 ## U.S. customary
 
 @docs shortTons, inShortTons
+
+
+## Constants
+
+Shorthand for `Mass.kilograms 1`, `Mass.shortTons 1` etc. Can be convenient to
+use with [`Quantity.per`](Quantity#per).
+
+@docs kilogram, gram, metricTon, pound, ounce, longTon, shortTon
 
 -}
 
@@ -156,3 +164,45 @@ shortTons =
 inShortTons : Mass.Mass -> Float
 inShortTons =
   Mass.inShortTons
+
+
+{-| -}
+kilogram : Mass.Mass
+kilogram =
+  Mass.kilogram
+
+
+{-| -}
+gram : Mass.Mass
+gram =
+  Mass.gram
+
+
+{-| -}
+metricTon : Mass.Mass
+metricTon =
+  Mass.metricTon
+
+
+{-| -}
+pound : Mass.Mass
+pound =
+  Mass.pound
+
+
+{-| -}
+ounce : Mass.Mass
+ounce =
+  Mass.ounce
+
+
+{-| -}
+longTon : Mass.Mass
+longTon =
+  Mass.longTon
+
+
+{-| -}
+shortTon : Mass.Mass
+shortTon =
+  Mass.shortTon

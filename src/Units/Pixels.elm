@@ -1,4 +1,4 @@
-module Units.Pixels exposing (Pixels, PixelsPerSecond, PixelsPerSecondSquared, SquarePixels, pixels, inPixels, pixelsPerSecond, inPixelsPerSecond, pixelsPerSecondSquared, inPixelsPerSecondSquared, squarePixels, inSquarePixels)
+module Units.Pixels exposing (Pixels, PixelsPerSecond, PixelsPerSecondSquared, SquarePixels, pixels, inPixels, pixel, pixelsPerSecond, inPixelsPerSecond, pixelsPerSecondSquared, inPixelsPerSecondSquared, squarePixels, inSquarePixels)
 
 {-| Although most of the focus of `elm-units` is on physical/scientific units,
 it's very useful to be able to safely convert back and forth between (for
@@ -14,7 +14,7 @@ units, or even do type-safe math directly on pixel values.
 
 @docs Pixels, PixelsPerSecond, PixelsPerSecondSquared, SquarePixels
 
-@docs pixels, inPixels
+@docs pixels, inPixels, pixel
 
 @docs pixelsPerSecond, inPixelsPerSecond
 
@@ -91,6 +91,14 @@ pixels =
 inPixels : Quantity.Quantity number Pixels.Pixels -> number
 inPixels =
   Pixels.inPixels
+
+
+{-| Shorthand for `Pixels.pixels 1`. Can be convenient to use with
+[`Quantity.per`](Quantity#per).
+-}
+pixel : Quantity.Quantity number Pixels.Pixels
+pixel =
+  Pixels.pixel
 
 
 {-| Construct an on-screen speed from a number of pixels per second.

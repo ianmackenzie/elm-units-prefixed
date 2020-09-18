@@ -1,4 +1,4 @@
-module Units.Volume exposing (Volume, CubicMeters, cubicMeters, inCubicMeters, milliliters, inMilliliters, liters, inLiters, cubicInches, inCubicInches, cubicFeet, inCubicFeet, cubicYards, inCubicYards, usLiquidGallons, inUsLiquidGallons, usDryGallons, inUsDryGallons, imperialGallons, inImperialGallons, usLiquidQuarts, inUsLiquidQuarts, usDryQuarts, inUsDryQuarts, imperialQuarts, inImperialQuarts, usLiquidPints, inUsLiquidPints, usDryPints, inUsDryPints, imperialPints, inImperialPints, usFluidOunces, inUsFluidOunces, imperialFluidOunces, inImperialFluidOunces)
+module Units.Volume exposing (Volume, CubicMeters, cubicMeters, inCubicMeters, milliliters, inMilliliters, liters, inLiters, cubicInches, inCubicInches, cubicFeet, inCubicFeet, cubicYards, inCubicYards, usLiquidGallons, inUsLiquidGallons, usDryGallons, inUsDryGallons, imperialGallons, inImperialGallons, usLiquidQuarts, inUsLiquidQuarts, usDryQuarts, inUsDryQuarts, imperialQuarts, inImperialQuarts, usLiquidPints, inUsLiquidPints, usDryPints, inUsDryPints, imperialPints, inImperialPints, usFluidOunces, inUsFluidOunces, imperialFluidOunces, inImperialFluidOunces, cubicMeter, milliliter, liter, cubicInch, cubicFoot, cubicYard, usLiquidGallon, usDryGallon, imperialGallon, usLiquidQuart, usDryQuart, imperialQuart, usLiquidPint, usDryPint, imperialPint, usFluidOunce, imperialFluidOunce)
 
 {-| A `Volume` represents a volume in cubic meters, cubic feet, liters, US
 liquid gallons, imperial fluid ounces etc. It is stored as a number of cubic
@@ -20,6 +20,19 @@ meters.
 @docs usLiquidQuarts, inUsLiquidQuarts, usDryQuarts, inUsDryQuarts, imperialQuarts, inImperialQuarts
 @docs usLiquidPints, inUsLiquidPints, usDryPints, inUsDryPints, imperialPints, inImperialPints
 @docs usFluidOunces, inUsFluidOunces, imperialFluidOunces, inImperialFluidOunces
+
+
+## Constants
+
+Shorthand for `Volume.cubicMeters 1`, `Volume.imperialGallons 1` etc. Can be
+convenient to use with [`Quantity.per`](Quantity#per).
+
+@docs cubicMeter, milliliter, liter
+@docs cubicInch, cubicFoot, cubicYard
+@docs usLiquidGallon, usDryGallon, imperialGallon
+@docs usLiquidQuart, usDryQuart, imperialQuart
+@docs usLiquidPint, usDryPint, imperialPint
+@docs usFluidOunce, imperialFluidOunce
 
 -}
 
@@ -274,3 +287,105 @@ imperialFluidOunces =
 inImperialFluidOunces : Volume.Volume -> Float
 inImperialFluidOunces =
   Volume.inImperialFluidOunces
+
+
+{-| -}
+cubicMeter : Volume.Volume
+cubicMeter =
+  Volume.cubicMeter
+
+
+{-| -}
+milliliter : Volume.Volume
+milliliter =
+  Volume.milliliter
+
+
+{-| -}
+liter : Volume.Volume
+liter =
+  Volume.liter
+
+
+{-| -}
+cubicInch : Volume.Volume
+cubicInch =
+  Volume.cubicInch
+
+
+{-| -}
+cubicFoot : Volume.Volume
+cubicFoot =
+  Volume.cubicFoot
+
+
+{-| -}
+cubicYard : Volume.Volume
+cubicYard =
+  Volume.cubicYard
+
+
+{-| -}
+usLiquidGallon : Volume.Volume
+usLiquidGallon =
+  Volume.usLiquidGallon
+
+
+{-| -}
+usDryGallon : Volume.Volume
+usDryGallon =
+  Volume.usDryGallon
+
+
+{-| -}
+imperialGallon : Volume.Volume
+imperialGallon =
+  Volume.imperialGallon
+
+
+{-| -}
+usLiquidQuart : Volume.Volume
+usLiquidQuart =
+  Volume.usLiquidQuart
+
+
+{-| -}
+usDryQuart : Volume.Volume
+usDryQuart =
+  Volume.usDryQuart
+
+
+{-| -}
+imperialQuart : Volume.Volume
+imperialQuart =
+  Volume.imperialQuart
+
+
+{-| -}
+usLiquidPint : Volume.Volume
+usLiquidPint =
+  Volume.usLiquidPint
+
+
+{-| -}
+usDryPint : Volume.Volume
+usDryPint =
+  Volume.usDryPint
+
+
+{-| -}
+imperialPint : Volume.Volume
+imperialPint =
+  Volume.imperialPint
+
+
+{-| -}
+usFluidOunce : Volume.Volume
+usFluidOunce =
+  Volume.usFluidOunce
+
+
+{-| -}
+imperialFluidOunce : Volume.Volume
+imperialFluidOunce =
+  Volume.imperialFluidOunce

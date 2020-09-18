@@ -1,4 +1,4 @@
-module Units.Angle exposing (Angle, Radians, radians, inRadians, degrees, inDegrees, turns, inTurns, minutes, inMinutes, seconds, inSeconds, Sign, fromDms, toDms, sin, cos, tan, asin, acos, atan, atan2)
+module Units.Angle exposing (Angle, Radians, radians, inRadians, degrees, inDegrees, turns, inTurns, minutes, inMinutes, seconds, inSeconds, Sign, fromDms, toDms, sin, cos, tan, asin, acos, atan, atan2, radian, degree, turn, minute, second)
 
 {-| An `Angle` represents an angle in degrees, radians, or turns. It is stored
 as a number of radians.
@@ -32,6 +32,14 @@ these functions instead of [the corresponding ones in core][1].
 [1]: https://package.elm-lang.org/packages/elm/core/latest/Basics#trigonometry
 
 @docs sin, cos, tan, asin, acos, atan, atan2
+
+
+## Constants
+
+Shorthand for `Angle.radians 1`, `Angle.degrees 1` etc. Can be convenient to use
+with [`Quantity.per`](Quantity#per).
+
+@docs radian, degree, turn, minute, second
 
 -}
 
@@ -280,3 +288,33 @@ atan =
 atan2 : Quantity.Quantity Float units -> Quantity.Quantity Float units -> Angle.Angle
 atan2 =
   Angle.atan2
+
+
+{-| -}
+radian : Angle.Angle
+radian =
+  Angle.radian
+
+
+{-| -}
+degree : Angle.Angle
+degree =
+  Angle.degree
+
+
+{-| -}
+turn : Angle.Angle
+turn =
+  Angle.turn
+
+
+{-| -}
+minute : Angle.Angle
+minute =
+  Angle.minute
+
+
+{-| -}
+second : Angle.Angle
+second =
+  Angle.second

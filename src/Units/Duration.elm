@@ -1,4 +1,4 @@
-module Units.Duration exposing (Duration, Seconds, from, seconds, inSeconds, milliseconds, inMilliseconds, minutes, inMinutes, hours, inHours, days, inDays, weeks, inWeeks, julianYears, inJulianYears)
+module Units.Duration exposing (Duration, Seconds, from, seconds, inSeconds, milliseconds, inMilliseconds, minutes, inMinutes, hours, inHours, days, inDays, weeks, inWeeks, julianYears, inJulianYears, second, millisecond, minute, hour, day, week, julianYear)
 
 {-| A `Duration` refers to an elapsed time in seconds, milliseconds, hours etc.,
 as opposed to a specific instant in time (which would generally be represented
@@ -11,6 +11,14 @@ value). It is stored as a number of seconds.
 ## Conversions
 
 @docs from, seconds, inSeconds, milliseconds, inMilliseconds, minutes, inMinutes, hours, inHours, days, inDays, weeks, inWeeks, julianYears, inJulianYears
+
+
+## Constants
+
+Shorthand for `Duration.seconds 1`, `Duration.hours 1` etc. Can be convenient to
+use with [`Quantity.per`](Quantity#per).
+
+@docs second, millisecond, minute, hour, day, week, julianYear
 
 -}
 
@@ -201,3 +209,45 @@ julianYears =
 inJulianYears : Duration.Duration -> Float
 inJulianYears =
   Duration.inJulianYears
+
+
+{-| -}
+second : Duration.Duration
+second =
+  Duration.second
+
+
+{-| -}
+millisecond : Duration.Duration
+millisecond =
+  Duration.millisecond
+
+
+{-| -}
+minute : Duration.Duration
+minute =
+  Duration.minute
+
+
+{-| -}
+hour : Duration.Duration
+hour =
+  Duration.hour
+
+
+{-| -}
+day : Duration.Duration
+day =
+  Duration.day
+
+
+{-| -}
+week : Duration.Duration
+week =
+  Duration.week
+
+
+{-| -}
+julianYear : Duration.Duration
+julianYear =
+  Duration.julianYear

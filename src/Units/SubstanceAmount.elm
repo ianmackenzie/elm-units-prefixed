@@ -1,4 +1,4 @@
-module Units.SubstanceAmount exposing (SubstanceAmount, Moles, moles, inMoles, picomoles, inPicomoles, nanomoles, inNanomoles, micromoles, inMicromoles, millimoles, inMillimoles, kilomoles, inKilomoles, megamoles, inMegamoles, gigamoles, inGigamoles)
+module Units.SubstanceAmount exposing (SubstanceAmount, Moles, moles, inMoles, picomoles, inPicomoles, nanomoles, inNanomoles, micromoles, inMicromoles, millimoles, inMillimoles, centimoles, inCentimoles, decimoles, inDecimoles, kilomoles, inKilomoles, megamoles, inMegamoles, gigamoles, inGigamoles)
 
 {-| A `SubstanceAmount` value represents a substance amount in [moles][1].
 
@@ -10,8 +10,9 @@ module Units.SubstanceAmount exposing (SubstanceAmount, Moles, moles, inMoles, p
 ## Conversions
 
 @docs moles, inMoles, picomoles, inPicomoles, nanomoles, inNanomoles
-@docs micromoles, inMicromoles, millimoles, inMillimoles, kilomoles, inKilomoles
-@docs megamoles, inMegamoles, gigamoles, inGigamoles
+@docs micromoles, inMicromoles, millimoles, inMillimoles
+@docs centimoles, inCentimoles, decimoles, inDecimoles
+@docs kilomoles, inKilomoles, megamoles, inMegamoles, gigamoles, inGigamoles
 
 -}
 
@@ -97,6 +98,34 @@ millimoles =
 inMillimoles : SubstanceAmount.SubstanceAmount -> Float
 inMillimoles =
   SubstanceAmount.inMillimoles
+
+
+{-| Construct a substance amount from a number of centimoles.
+-}
+centimoles : Float -> SubstanceAmount.SubstanceAmount
+centimoles =
+  SubstanceAmount.centimoles
+
+
+{-| Convert a substance amount to a number of centimoles.
+-}
+inCentimoles : SubstanceAmount.SubstanceAmount -> Float
+inCentimoles =
+  SubstanceAmount.inCentimoles
+
+
+{-| Construct a substance amount from a number of decimoles.
+-}
+decimoles : Float -> SubstanceAmount.SubstanceAmount
+decimoles =
+  SubstanceAmount.decimoles
+
+
+{-| Convert a substance amount to a number of decimoles.
+-}
+inDecimoles : SubstanceAmount.SubstanceAmount -> Float
+inDecimoles =
+  SubstanceAmount.inDecimoles
 
 
 {-| Construct a substance amount from a number of kilomoles.

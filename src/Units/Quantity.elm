@@ -1,4 +1,4 @@
-module Units.Quantity exposing (Quantity, Squared, Cubed, Product, Rate, zero, infinity, positiveInfinity, negativeInfinity, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, max, min, isNaN, isInfinite, negate, abs, plus, minus, multiplyBy, divideBy, twice, half, squared, sqrt, cubed, cbrt, times, over, over_, per, at, at_, for, inverse, ratio, clamp, interpolateFrom, midpoint, range, round, floor, ceiling, truncate, toFloatQuantity, sum, minimum, maximum, sort, sortBy, Unitless, int, toInt, float, toFloat)
+module Units.Quantity exposing (Quantity, Squared, Cubed, Product, Rate, zero, infinity, positiveInfinity, negativeInfinity, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, max, min, isNaN, isInfinite, negate, abs, plus, minus, multiplyBy, divideBy, twice, half, squared, sqrt, cubed, cbrt, times, over, over_, per, at, at_, for, inverse, ratio, clamp, interpolateFrom, midpoint, range, in_, round, floor, ceiling, truncate, toFloatQuantity, sum, minimum, maximum, minimumBy, maximumBy, sort, sortBy, Unitless, int, toInt, float, toFloat)
 
 {-|
 
@@ -40,7 +40,7 @@ and work with composite units in a fairly flexible way.
 
 ## Miscellaneous
 
-@docs ratio, clamp, interpolateFrom, midpoint, range
+@docs ratio, clamp, interpolateFrom, midpoint, range, in_
 
 
 # `Int`/`Float` conversion
@@ -50,6 +50,11 @@ cents or game tiles where an `Int` number of units is meaningful. For quantities
 like `Length` or `Duration`, it doesn't really make sense to round to an `Int`
 value since the underyling base unit is pretty arbitrary - should `round`ing a
 `Duration` give you an `Int` number of seconds, milliseconds, or something else?
+(The actual behavior is that quantities will generally get rounded to the
+nearest SI base unit, since that is how they are stored internally - for
+example, `Length` values will get rounded to the nearest meter regardless of
+whether they were constructed from a number of meters, centimeters, inches or
+light years.)
 
 @docs round, floor, ceiling, truncate, toFloatQuantity
 
@@ -57,11 +62,13 @@ value since the underyling base unit is pretty arbitrary - should `round`ing a
 # List functions
 
 These functions act just like the corresponding functions in the built-in `List`
-module. They're necessary because the built-in `List.sum` only supports `List
-Int` and `List Float`, and `minimum`/`maximum`/`sort` only support built-in
-comparable types like `Int`, `Float`, `String` and tuples.
+module (or, int the case of `minimumBy` and `maximumBy`, the `List.Extra` module
+from `elm-community/list-extra`). They're necessary because the built-in
+`List.sum` only supports `List Int` and `List Float`, and the remaining
+functions only support built-in `comparable` types like `Int`, `Float`, `String`
+and tuples.
 
-@docs sum, minimum, maximum, sort, sortBy
+@docs sum, minimum, maximum, minimumBy, maximumBy, sort, sortBy
 
 
 # Unitless quantities
@@ -859,7 +866,47 @@ range =
   Quantity.range
 
 
-{-| Round a `Float`-valued quantity to the nearest `Int`.
+{-| Generalized units conversion function that lets you convert to many kinds of
+units not directly supported by `elm-units`. The first argument is a function
+that constructs a value of the desired unit type, and the second is the quantity
+to convert. For example,
+
+    Speed.metersPerSecond 5
+        |> Speed.inFeetPerSecond
+    --> 16.4042
+
+is equivalent to
+
+    Speed.metersPerSecond 5
+        |> Quantity.in_ Speed.feetPerSecond
+    --> 16.4042
+
+More interestingly, if you wanted to get speed in some weirder unit like
+millimeters per minute (not directly supported by `elm-units`), you could do
+
+    Speed.metersPerSecond 5
+        |> Quantity.in_
+            (Length.millimeters
+                >> Quantity.per (Duration.minutes 1)
+            )
+    --> 300000
+
+Internally,
+
+    Quantity.in_ someUnits someQuantity
+
+is simply implemented as
+
+    Quantity.ratio someQuantity (someUnits 1)
+
+-}
+in_ : (Float -> Quantity.Quantity Float units) -> Quantity.Quantity Float units -> Float
+in_ =
+  Quantity.in_
+
+
+{-| Round a `Float`-valued quantity to the nearest `Int`. Note that [this may
+not do what you expect](#-int-float-conversion).
 
     Quantity.round (Pixels.pixels 3.5)
     --> Pixels.pixels 4
@@ -870,7 +917,8 @@ round =
   Quantity.round
 
 
-{-| Round a `Float`-valued quantity down to the nearest `Int`.
+{-| Round a `Float`-valued quantity down to the nearest `Int`. Note that [this
+may not do what you expect](#-int-float-conversion).
 
     Quantity.floor (Pixels.pixels 2.9)
     --> Pixels.pixels 2
@@ -884,7 +932,8 @@ floor =
   Quantity.floor
 
 
-{-| Round a `Float`-valued quantity up to the nearest `Int`.
+{-| Round a `Float`-valued quantity up to the nearest `Int`. Note that [this may
+not do what you expect](#-int-float-conversion).
 
     Quantity.ceiling (Pixels.pixels 1.2)
     --> Pixels.pixels 2
@@ -898,7 +947,8 @@ ceiling =
   Quantity.ceiling
 
 
-{-| Round a `Float`-valued quantity towards zero.
+{-| Round a `Float`-valued quantity towards zero. Note that [this may not do
+what you expect](#-int-float-conversion).
 
     Quantity.truncate (Pixels.pixels -2.8)
     --> Pixels.pixels -2
@@ -966,6 +1016,46 @@ list is empty.
 maximum : List (Quantity.Quantity number units) -> Maybe (Quantity.Quantity number units)
 maximum =
   Quantity.maximum
+
+
+{-| Find the 'minimum' item in a list as measured by some derived `Quantity`:
+
+    people =
+        [ { name = "Bob", height = Length.meters 1.6 }
+        , { name = "Charlie", height = Length.meters 2.0 }
+        , { name = "Alice", height = Length.meters 1.8 }
+        ]
+
+    Quantity.minimumBy .height people
+    --> Just { name = "Bob", height = Length.meters 1.6 }
+
+If the list is empty, returns `Nothing`. If multiple items in the list are tied,
+then the first one is returned.
+
+-}
+minimumBy : (a -> Quantity.Quantity number units) -> List a -> Maybe a
+minimumBy =
+  Quantity.minimumBy
+
+
+{-| Find the 'maximum' item in a list as measured by some derived `Quantity`:
+
+    people =
+        [ { name = "Bob", height = Length.meters 1.6 }
+        , { name = "Charlie", height = Length.meters 2.0 }
+        , { name = "Alice", height = Length.meters 1.8 }
+        ]
+
+    Quantity.maximumBy .height people
+    --> Just { name = "Charlie", height = Length.meters 2.0 }
+
+If the list is empty, returns `Nothing`. If multiple items in the list are tied,
+then the first one is returned.
+
+-}
+maximumBy : (a -> Quantity.Quantity number units) -> List a -> Maybe a
+maximumBy =
+  Quantity.maximumBy
 
 
 {-| Sort a list of quantities.

@@ -1,4 +1,4 @@
-module Units.Temperature exposing (Temperature, Delta, CelsiusDegrees, degreesCelsius, inDegreesCelsius, degreesFahrenheit, inDegreesFahrenheit, kelvins, inKelvins, absoluteZero, celsiusDegrees, inCelsiusDegrees, fahrenheitDegrees, inFahrenheitDegrees, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, min, max, plus, minus, clamp, minimum, maximum, sort, sortBy)
+module Units.Temperature exposing (Temperature, Delta, CelsiusDegrees, degreesCelsius, inDegreesCelsius, degreesFahrenheit, inDegreesFahrenheit, kelvins, inKelvins, absoluteZero, celsiusDegrees, inCelsiusDegrees, fahrenheitDegrees, inFahrenheitDegrees, celsiusDegree, fahrenheitDegree, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, min, max, plus, minus, clamp, minimum, maximum, sort, sortBy)
 
 {-| Unlike other modules in `elm-units`, this module contains two different
 primary types:
@@ -33,6 +33,14 @@ this module uses (for example) `celsiusDegrees` to indicate a temperature delta
 actual temperature.
 
 @docs celsiusDegrees, inCelsiusDegrees, fahrenheitDegrees, inFahrenheitDegrees
+
+
+## Constants
+
+Shorthand for `Temperature.celsiusDegrees 1` and `Temperature.fahrenheitDegrees
+1`. Can be convenient to use with [`Quantity.per`](Quantity#per).
+
+@docs celsiusDegree, fahrenheitDegree
 
 
 # Comparison
@@ -173,6 +181,18 @@ fahrenheitDegrees =
 inFahrenheitDegrees : Temperature.Delta -> Float
 inFahrenheitDegrees =
   Temperature.inFahrenheitDegrees
+
+
+{-| -}
+celsiusDegree : Temperature.Delta
+celsiusDegree =
+  Temperature.celsiusDegree
+
+
+{-| -}
+fahrenheitDegree : Temperature.Delta
+fahrenheitDegree =
+  Temperature.fahrenheitDegree
 
 
 {-| Check if one temperature is less than another. Note the [argument order](/#argument-order)!

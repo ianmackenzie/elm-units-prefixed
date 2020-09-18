@@ -1,4 +1,4 @@
-module Units.Area exposing (Area, SquareMeters, squareMeters, inSquareMeters, squareMillimeters, inSquareMillimeters, squareCentimeters, inSquareCentimeters, hectares, inHectares, squareKilometers, inSquareKilometers, squareInches, inSquareInches, squareFeet, inSquareFeet, squareYards, inSquareYards, acres, inAcres, squareMiles, inSquareMiles)
+module Units.Area exposing (Area, SquareMeters, squareMeters, inSquareMeters, squareMillimeters, inSquareMillimeters, squareCentimeters, inSquareCentimeters, hectares, inHectares, squareKilometers, inSquareKilometers, squareInches, inSquareInches, squareFeet, inSquareFeet, squareYards, inSquareYards, acres, inAcres, squareMiles, inSquareMiles, squareMeter, squareMillimeter, squareCentimeter, hectare, squareKilometer, squareInch, squareFoot, squareYard, acre, squareMile)
 
 {-| An `Area` represents an area in square meters, square feet, acres, hectares
 etc. It is stored as a number of square meters.
@@ -26,6 +26,15 @@ following are all equivalent:
 ## Imperial
 
 @docs squareInches, inSquareInches, squareFeet, inSquareFeet, squareYards, inSquareYards, acres, inAcres, squareMiles, inSquareMiles
+
+
+## Constants
+
+Shorthand for `Area.squareMeters 1`, `Area.acres 1` etc. Can be convenient to
+use with [`Quantity.per`](Quantity#per).
+
+@docs squareMeter, squareMillimeter, squareCentimeter, hectare, squareKilometer
+@docs squareInch, squareFoot, squareYard, acre, squareMile
 
 -}
 
@@ -182,3 +191,63 @@ squareMiles =
 inSquareMiles : Area.Area -> Float
 inSquareMiles =
   Area.inSquareMiles
+
+
+{-| -}
+squareMeter : Area.Area
+squareMeter =
+  Area.squareMeter
+
+
+{-| -}
+squareMillimeter : Area.Area
+squareMillimeter =
+  Area.squareMillimeter
+
+
+{-| -}
+squareCentimeter : Area.Area
+squareCentimeter =
+  Area.squareCentimeter
+
+
+{-| -}
+hectare : Area.Area
+hectare =
+  Area.hectare
+
+
+{-| -}
+squareKilometer : Area.Area
+squareKilometer =
+  Area.squareKilometer
+
+
+{-| -}
+squareInch : Area.Area
+squareInch =
+  Area.squareInch
+
+
+{-| -}
+squareFoot : Area.Area
+squareFoot =
+  Area.squareFoot
+
+
+{-| -}
+squareYard : Area.Area
+squareYard =
+  Area.squareYard
+
+
+{-| -}
+acre : Area.Area
+acre =
+  Area.acre
+
+
+{-| -}
+squareMile : Area.Area
+squareMile =
+  Area.squareMile
