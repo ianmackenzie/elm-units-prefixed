@@ -11,6 +11,9 @@ energy directly as a product of force and distance:
 
 @docs Energy, Joules
 
+
+## Conversions
+
 @docs joules, inJoules, kilojoules, inKilojoules, megajoules, inMegajoules, kilowattHours, inKilowattHours
 
 -}

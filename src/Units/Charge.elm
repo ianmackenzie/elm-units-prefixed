@@ -5,6 +5,9 @@ hours. It is stored as a number of coulombs.
 
 @docs Charge, Coulombs
 
+
+## Conversions
+
 @docs coulombs, inCoulombs, ampereHours, inAmpereHours, milliampereHours, inMilliampereHours
 
 -}

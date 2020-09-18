@@ -1,4 +1,4 @@
-module Units.Quantity exposing (Quantity, Squared, Cubed, Product, Rate, zero, infinity, positiveInfinity, negativeInfinity, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, max, min, isNaN, isInfinite, negate, abs, plus, minus, multiplyBy, divideBy, squared, sqrt, cubed, cbrt, times, over, over_, per, at, at_, for, inverse, ratio, clamp, interpolateFrom, midpoint, range, round, floor, ceiling, truncate, toFloatQuantity, sum, minimum, maximum, sort, sortBy, Unitless, int, toInt, float, toFloat)
+module Units.Quantity exposing (Quantity, Squared, Cubed, Product, Rate, zero, infinity, positiveInfinity, negativeInfinity, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, max, min, isNaN, isInfinite, negate, abs, plus, minus, multiplyBy, divideBy, twice, half, squared, sqrt, cubed, cbrt, times, over, over_, per, at, at_, for, inverse, ratio, clamp, interpolateFrom, midpoint, range, round, floor, ceiling, truncate, toFloatQuantity, sum, minimum, maximum, sort, sortBy, Unitless, int, toInt, float, toFloat)
 
 {-|
 
@@ -25,7 +25,7 @@ and work with composite units in a fairly flexible way.
 
 # Arithmetic
 
-@docs negate, abs, plus, minus, multiplyBy, divideBy, squared, sqrt, cubed, cbrt
+@docs negate, abs, plus, minus, multiplyBy, divideBy, twice, half, squared, sqrt, cubed, cbrt
 
 
 ## Working with products
@@ -413,6 +413,28 @@ Note that there are [other forms of division](/#multiplication-and-division)!
 divideBy : Float -> Quantity.Quantity Float units -> Quantity.Quantity Float units
 divideBy =
   Quantity.divideBy
+
+
+{-| Convenient shorthand for `Quantity.multiplyBy 2`.
+
+    Quantity.twice (Duration.minutes 30)
+    --> Duration.hours 1
+
+-}
+twice : Quantity.Quantity number units -> Quantity.Quantity number units
+twice =
+  Quantity.twice
+
+
+{-| Convenient shorthand for `Quantity.multiplyBy 0.5`.
+
+    Quantity.half (Length.meters 1)
+    --> Length.centimeters 50
+
+-}
+half : Quantity.Quantity Float units -> Quantity.Quantity Float units
+half =
+  Quantity.half
 
 
 {-| Square a quantity with some `units`, resulting in a new quantity in

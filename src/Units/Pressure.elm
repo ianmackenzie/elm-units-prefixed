@@ -22,7 +22,20 @@ You can also do rate-related calculations with `Pressure` values to compute
 
 @docs Pressure, Pascals
 
-@docs pascals, inPascals, kilopascals, inKilopascals, megapascals, inMegapascals, poundsPerSquareInch, inPoundsPerSquareInch, atmospheres, inAtmospheres
+
+## Metric
+
+@docs pascals, inPascals, kilopascals, inKilopascals, megapascals, inMegapascals
+
+
+## Imperial
+
+@docs poundsPerSquareInch, inPoundsPerSquareInch
+
+
+## Atmospheric
+
+@docs atmospheres, inAtmospheres
 
 -}
 

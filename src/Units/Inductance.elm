@@ -3,6 +3,10 @@ module Units.Inductance exposing (Inductance, Henries, henries, inHenries, nanoh
 {-| A `Inductance` value represents an electrical inductance in henries.
 
 @docs Inductance, Henries
+
+
+## Conversions
+
 @docs henries, inHenries
 @docs nanohenries, inNanohenries, microhenries, inMicrohenries, millihenries, inMillihenries, kilohenries, inKilohenries
 

@@ -1,4 +1,4 @@
-module Units.Speed exposing (Speed, MetersPerSecond, metersPerSecond, inMetersPerSecond, feetPerSecond, inFeetPerSecond, kilometersPerHour, inKilometersPerHour, milesPerHour, inMilesPerHour)
+module Units.Speed exposing (Speed, MetersPerSecond, metersPerSecond, inMetersPerSecond, kilometersPerHour, inKilometersPerHour, feetPerSecond, inFeetPerSecond, milesPerHour, inMilesPerHour)
 
 {-| A `Speed` value represents a speed in meters per second, miles per hour etc.
 It is stored as a number of meters per second.
@@ -23,8 +23,15 @@ You can also do rate-related calculations with `Speed` values to compute
 
 @docs Speed, MetersPerSecond
 
-@docs metersPerSecond, inMetersPerSecond, feetPerSecond, inFeetPerSecond
-@docs kilometersPerHour, inKilometersPerHour, milesPerHour, inMilesPerHour
+
+## Metric
+
+@docs metersPerSecond, inMetersPerSecond, kilometersPerHour, inKilometersPerHour
+
+
+## Imperial
+
+@docs feetPerSecond, inFeetPerSecond, milesPerHour, inMilesPerHour
 
 -}
 
@@ -58,20 +65,6 @@ inMetersPerSecond =
   Speed.inMetersPerSecond
 
 
-{-| Construct a speed from a number of feet per second.
--}
-feetPerSecond : Float -> Speed.Speed
-feetPerSecond =
-  Speed.feetPerSecond
-
-
-{-| Convert a speed to a number of feet per second.
--}
-inFeetPerSecond : Speed.Speed -> Float
-inFeetPerSecond =
-  Speed.inFeetPerSecond
-
-
 {-| Construct a speed from a number of kilometers per hour.
 -}
 kilometersPerHour : Float -> Speed.Speed
@@ -84,6 +77,20 @@ kilometersPerHour =
 inKilometersPerHour : Speed.Speed -> Float
 inKilometersPerHour =
   Speed.inKilometersPerHour
+
+
+{-| Construct a speed from a number of feet per second.
+-}
+feetPerSecond : Float -> Speed.Speed
+feetPerSecond =
+  Speed.feetPerSecond
+
+
+{-| Convert a speed to a number of feet per second.
+-}
+inFeetPerSecond : Speed.Speed -> Float
+inFeetPerSecond =
+  Speed.inFeetPerSecond
 
 
 {-| Construct a speed from a number of miles per hour.

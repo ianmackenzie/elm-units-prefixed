@@ -27,7 +27,20 @@ You can also do rate-related calculations with `Acceleration` values to compute
 
 @docs Acceleration, MetersPerSecondSquared
 
-@docs metersPerSecondSquared, inMetersPerSecondSquared, feetPerSecondSquared, inFeetPerSecondSquared, gees, inGees
+
+## Metric
+
+@docs metersPerSecondSquared, inMetersPerSecondSquared
+
+
+## Imperial
+
+@docs feetPerSecondSquared, inFeetPerSecondSquared
+
+
+## Gravitational
+
+@docs gees, inGees
 
 -}
 
