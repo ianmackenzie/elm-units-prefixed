@@ -1,4 +1,4 @@
-module Units.Quantity exposing (Quantity, Squared, Cubed, Product, Rate, zero, infinity, positiveInfinity, negativeInfinity, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, max, min, isNaN, isInfinite, negate, abs, plus, minus, multiplyBy, divideBy, twice, half, squared, sqrt, cubed, cbrt, times, over, over_, per, at, at_, for, inverse, ratio, clamp, interpolateFrom, midpoint, range, in_, round, floor, ceiling, truncate, toFloatQuantity, sum, minimum, maximum, minimumBy, maximumBy, sort, sortBy, Unitless, int, toInt, float, toFloat)
+module Units.Quantity exposing (Quantity, Squared, Cubed, Product, Rate, zero, infinity, positiveInfinity, negativeInfinity, lessThan, greaterThan, lessThanOrEqualTo, greaterThanOrEqualTo, compare, equalWithin, max, min, isNaN, isInfinite, negate, abs, plus, minus, multiplyBy, divideBy, twice, half, squared, sqrt, cubed, cbrt, times, over, over_, per, at, at_, for, inverse, modBy, fractionalModBy, remainderBy, fractionalRemainderBy, ratio, clamp, interpolateFrom, midpoint, range, in_, round, floor, ceiling, truncate, toFloatQuantity, sum, minimum, maximum, minimumBy, maximumBy, sort, sortBy, Unitless, int, toInt, float, toFloat)
 
 {-|
 
@@ -36,6 +36,27 @@ and work with composite units in a fairly flexible way.
 ## Working with rates
 
 @docs per, at, at_, for, inverse
+
+
+## Modular arithmetic
+
+`modBy` and `remainderBy` behave just like the [`modBy`](https://package.elm-lang.org/packages/elm/core/latest/Basics#modBy)
+and [`remainderBy`](https://package.elm-lang.org/packages/elm/core/latest/Basics#remainderBy)
+functions from Elm's built-in `Basics` module, but work on `Quantity` values
+instead of raw `Int`s. `fractionalModBy` and `fractionalRemainderBy` have the
+same behaviour but extended to `Float`-valued quantities.
+
+    import Pixels exposing (pixels)
+    import Length exposing (meters, centimeters)
+
+    Quantity.modBy (pixels 4) (pixels 11)
+    --> pixels 3
+
+    Quantity.fractionalModBy (meters 0.5)
+        (centimeters 162.3)
+    --> centimeters 12.3
+
+@docs modBy, fractionalModBy, remainderBy, fractionalRemainderBy
 
 
 ## Miscellaneous
@@ -706,6 +727,30 @@ is equivalent to
 inverse : Quantity.Quantity Float (Quantity.Rate dependentUnits independentUnits) -> Quantity.Quantity Float (Quantity.Rate independentUnits dependentUnits)
 inverse =
   Quantity.inverse
+
+
+{-| -}
+modBy : Quantity.Quantity Int units -> Quantity.Quantity Int units -> Quantity.Quantity Int units
+modBy =
+  Quantity.modBy
+
+
+{-| -}
+fractionalModBy : Quantity.Quantity Float units -> Quantity.Quantity Float units -> Quantity.Quantity Float units
+fractionalModBy =
+  Quantity.fractionalModBy
+
+
+{-| -}
+remainderBy : Quantity.Quantity Int units -> Quantity.Quantity Int units -> Quantity.Quantity Int units
+remainderBy =
+  Quantity.remainderBy
+
+
+{-| -}
+fractionalRemainderBy : Quantity.Quantity Float units -> Quantity.Quantity Float units -> Quantity.Quantity Float units
+fractionalRemainderBy =
+  Quantity.fractionalRemainderBy
 
 
 {-| Find the ratio of two quantities with the same units.

@@ -1,4 +1,4 @@
-module Units.Length exposing (Length, Meters, meters, inMeters, microns, inMicrons, millimeters, inMillimeters, centimeters, inCentimeters, kilometers, inKilometers, thou, inThou, inches, inInches, feet, inFeet, yards, inYards, miles, inMiles, cssPixels, inCssPixels, points, inPoints, picas, inPicas, astronomicalUnits, inAstronomicalUnits, parsecs, inParsecs, lightYears, inLightYears, meter, micron, millimeter, centimeter, kilometer, inch, foot, yard, mile, astronomicalUnit, parsec, lightYear)
+module Units.Length exposing (Length, Meters, meters, inMeters, angstroms, inAngstroms, nanometers, inNanometers, microns, inMicrons, millimeters, inMillimeters, centimeters, inCentimeters, kilometers, inKilometers, thou, inThou, inches, inInches, feet, inFeet, yards, inYards, miles, inMiles, cssPixels, inCssPixels, points, inPoints, picas, inPicas, astronomicalUnits, inAstronomicalUnits, parsecs, inParsecs, lightYears, inLightYears, meter, angstrom, nanometer, micron, millimeter, centimeter, kilometer, inch, foot, yard, mile, astronomicalUnit, parsec, lightYear)
 
 {-| A `Length` represents a length in meters, feet, centimeters, miles etc. It
 is stored as a number of meters.
@@ -9,7 +9,7 @@ is stored as a number of meters.
 ## Metric
 
 @docs meters, inMeters
-@docs microns, inMicrons, millimeters, inMillimeters, centimeters, inCentimeters, kilometers, inKilometers
+@docs angstroms, inAngstroms, nanometers, inNanometers, microns, inMicrons, millimeters, inMillimeters, centimeters, inCentimeters, kilometers, inKilometers
 
 
 ## Imperial
@@ -35,7 +35,7 @@ with [`Quantity.per`](Quantity#per).
 Note that `thou` is omitted since it doesn't have separate singular and plural
 forms.
 
-@docs meter, micron, millimeter, centimeter, kilometer
+@docs meter, angstrom, nanometer, micron, millimeter, centimeter, kilometer
 @docs inch, foot, yard, mile
 @docs astronomicalUnit, parsec, lightYear
 
@@ -76,6 +76,50 @@ meters =
 inMeters : Length.Length -> Float
 inMeters =
   Length.inMeters
+
+
+{-| Construct a length from a number of angstroms.
+
+    Length.angstroms 1
+    --> Length.meters 1e-10
+
+-}
+angstroms : Float -> Length.Length
+angstroms =
+  Length.angstroms
+
+
+{-| Convert a length to a number of angstroms.
+
+    Length.nanometers 1 |> Length.inAngstroms
+    --> 10
+
+-}
+inAngstroms : Length.Length -> Float
+inAngstroms =
+  Length.inAngstroms
+
+
+{-| Construct a length from a number of nanometers.
+
+    Length.nanometers 1
+    --> Length.meters 1e-9
+
+-}
+nanometers : Float -> Length.Length
+nanometers =
+  Length.nanometers
+
+
+{-| Convert a length to a number of nanometers.
+
+    Length.microns 1 |> Length.inNanometers
+    --> 1000
+
+-}
+inNanometers : Length.Length -> Float
+inNanometers =
+  Length.inNanometers
 
 
 {-| Construct a length from a number of microns (micrometers).
@@ -336,6 +380,18 @@ inLightYears =
 meter : Length.Length
 meter =
   Length.meter
+
+
+{-| -}
+angstrom : Length.Length
+angstrom =
+  Length.angstrom
+
+
+{-| -}
+nanometer : Length.Length
+nanometer =
+  Length.nanometer
 
 
 {-| -}
