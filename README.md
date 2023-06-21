@@ -35,3 +35,15 @@ package are simply aliases for the underlying `elm-units` types, and functions
 are simply aliases for `elm-units` functions. This means that if you use this
 package you can still safely interoperate with other packages that use
 `elm-units` directly.
+
+## Updating this package
+
+Current approach: check out both this repository and [elm-package-prefixer](https://github.com/hayleigh-dot-dev/elm-package-prefixer),
+then from within the `elm-package-prefixer` checkout run to
+
+```
+npm install
+npm run build
+chmod +x index.js
+./index.js -n ianmackenzie/elm-units -t latest -a ianmackenzie -p Units -d /path/to/elm-units-prefixed/src/
+```

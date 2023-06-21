@@ -1,4 +1,4 @@
-module Units.Volume exposing (Volume, CubicMeters, cubicMeters, inCubicMeters, milliliters, inMilliliters, liters, inLiters, cubicInches, inCubicInches, cubicFeet, inCubicFeet, cubicYards, inCubicYards, usLiquidGallons, inUsLiquidGallons, usDryGallons, inUsDryGallons, imperialGallons, inImperialGallons, usLiquidQuarts, inUsLiquidQuarts, usDryQuarts, inUsDryQuarts, imperialQuarts, inImperialQuarts, usLiquidPints, inUsLiquidPints, usDryPints, inUsDryPints, imperialPints, inImperialPints, usFluidOunces, inUsFluidOunces, imperialFluidOunces, inImperialFluidOunces, cubicMeter, milliliter, liter, cubicInch, cubicFoot, cubicYard, usLiquidGallon, usDryGallon, imperialGallon, usLiquidQuart, usDryQuart, imperialQuart, usLiquidPint, usDryPint, imperialPint, usFluidOunce, imperialFluidOunce)
+module Units.Volume exposing (Volume, CubicMeters, cubicMeters, inCubicMeters, milliliters, inMilliliters, liters, inLiters, cubicCentimeters, inCubicCentimeters, cubicInches, inCubicInches, cubicFeet, inCubicFeet, cubicYards, inCubicYards, usLiquidGallons, inUsLiquidGallons, usDryGallons, inUsDryGallons, imperialGallons, inImperialGallons, usLiquidQuarts, inUsLiquidQuarts, usDryQuarts, inUsDryQuarts, imperialQuarts, inImperialQuarts, usLiquidPints, inUsLiquidPints, usDryPints, inUsDryPints, imperialPints, inImperialPints, usFluidOunces, inUsFluidOunces, imperialFluidOunces, inImperialFluidOunces, cubicMeter, milliliter, liter, cubicCentimeter, cubicInch, cubicFoot, cubicYard, usLiquidGallon, usDryGallon, imperialGallon, usLiquidQuart, usDryQuart, imperialQuart, usLiquidPint, usDryPint, imperialPint, usFluidOunce, imperialFluidOunce)
 
 {-| A `Volume` represents a volume in cubic meters, cubic feet, liters, US
 liquid gallons, imperial fluid ounces etc. It is stored as a number of cubic
@@ -10,7 +10,7 @@ meters.
 ## Metric
 
 @docs cubicMeters, inCubicMeters
-@docs milliliters, inMilliliters, liters, inLiters
+@docs milliliters, inMilliliters, liters, inLiters, cubicCentimeters, inCubicCentimeters
 
 
 ## Imperial
@@ -27,7 +27,7 @@ meters.
 Shorthand for `Volume.cubicMeters 1`, `Volume.imperialGallons 1` etc. Can be
 convenient to use with [`Quantity.per`](Quantity#per).
 
-@docs cubicMeter, milliliter, liter
+@docs cubicMeter, milliliter, liter, cubicCentimeter
 @docs cubicInch, cubicFoot, cubicYard
 @docs usLiquidGallon, usDryGallon, imperialGallon
 @docs usLiquidQuart, usDryQuart, imperialQuart
@@ -91,6 +91,22 @@ liters =
 inLiters : Volume.Volume -> Float
 inLiters =
   Volume.inLiters
+
+
+{-| Construct a volume from a number of cubic centimeters.
+Alias for `milliliters`.
+-}
+cubicCentimeters : Float -> Volume.Volume
+cubicCentimeters =
+  Volume.cubicCentimeters
+
+
+{-| Convert a volume to a number of cubic centimeters.
+Alias for `inMilliliters`.
+-}
+inCubicCentimeters : Volume.Volume -> Float
+inCubicCentimeters =
+  Volume.inCubicCentimeters
 
 
 {-| Construct a volume from a number of cubic inches.
@@ -305,6 +321,12 @@ milliliter =
 liter : Volume.Volume
 liter =
   Volume.liter
+
+
+{-| -}
+cubicCentimeter : Volume.Volume
+cubicCentimeter =
+  Volume.cubicCentimeter
 
 
 {-| -}

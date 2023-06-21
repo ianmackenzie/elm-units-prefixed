@@ -3,7 +3,7 @@
     "name": "ianmackenzie/elm-units-prefixed",
     "summary": "Prefixed version of elm-units for resolving module name conflicts",
     "license": "BSD-3-Clause",
-    "version": "2.7.0",
+    "version": "2.8.0",
     "exposed-modules": [
         "Units.Acceleration",
         "Units.Angle",
@@ -34,6 +34,7 @@
         "Units.Speed",
         "Units.SubstanceAmount",
         "Units.Temperature",
+        "Units.Torque",
         "Units.Voltage",
         "Units.Volume"
     ],
@@ -41,7 +42,7 @@
     "dependencies": {
         "elm/core": "1.0.0 <= v < 2.0.0",
         "elm/time": "1.0.0 <= v < 2.0.0",
-        "ianmackenzie/elm-units": "2.0.0 <= v < 3.0.0"
+        "ianmackenzie/elm-units": "2.10.0 <= v < 3.0.0"
     },
     "test-dependencies": {
         "elm-explorations/test": "1.0.0 <= v < 2.0.0"
